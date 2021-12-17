@@ -149,7 +149,7 @@ def convert_grid_coordinate(ox, oy, sweep_vec, sweep_start_position):
     ty = [iy - sweep_start_position[1] for iy in oy]
     th = math.atan2(sweep_vec[1], sweep_vec[0])
     rot = Rot.from_euler('z', th).as_matrix()[0:2, 0:2]
-    converted_xy = np.stack([tx, ty]).T @ rot
+    converted_xy = np.dot(np.stack([tx, ty]).T, rot)
 
     return converted_xy[:, 0], converted_xy[:, 1]
 
@@ -157,7 +157,7 @@ def convert_grid_coordinate(ox, oy, sweep_vec, sweep_start_position):
 def convert_global_coordinate(x, y, sweep_vec, sweep_start_position):
     th = math.atan2(sweep_vec[1], sweep_vec[0])
     rot = Rot.from_euler('z', -th).as_matrix()[0:2, 0:2]
-    converted_xy = np.stack([x, y]).T @ rot
+    converted_xy = np.dot(np.stack([x, y]).T, rot)
     rx = [ix + sweep_start_position[0] for ix in converted_xy[:, 0]]
     ry = [iy + sweep_start_position[1] for iy in converted_xy[:, 1]]
     return rx, ry
